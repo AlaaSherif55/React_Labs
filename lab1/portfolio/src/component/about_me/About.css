@@ -1,0 +1,20 @@
+#sec2{
+    scroll-behavior: smooth;
+ }
+ #sec2::-webkit-scrollbar{
+     display:none;
+ }
+img{
+    filter:grayscale(0);
+     height: 500px;
+    width: 500px;
+}
+.img-hero{
+    height: 500px;
+    border-radius: 50px;
+}
+
+.spacing{
+    margin-top:5%
+    
+}
