@@ -34,8 +34,8 @@ function Footer() {
         <div className="col rightside d-flex align-items-center justify-content-end">
             <div className="icons w-25 d-flex align-items-center justify-content-between">
             <FontAwesomeIcon icon={faLinkedinIn} className="fa-lg" />
-          <FontAwesomeIcon icon={faFacebook} className="fa-lg" />
-      <FontAwesomeIcon icon={faTwitter} className="fa-lg" />
+            <FontAwesomeIcon icon={faFacebook} className="fa-lg" />
+            <FontAwesomeIcon icon={faTwitter} className="fa-lg" />
             </div>
         </div>
     </div>

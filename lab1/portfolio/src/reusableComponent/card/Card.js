@@ -1,7 +1,7 @@
-function CardComp({renderContent,title,content}) {
+function CardComp({renderContent,title,content,index}) {
     console.log(renderContent)
   return (
-    renderContent(title, content)
+    renderContent(title, content,index)
   );
 }
 
