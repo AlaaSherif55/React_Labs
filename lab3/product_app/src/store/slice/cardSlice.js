@@ -4,22 +4,42 @@ const initialState = {
     items: [], 
 };
 
-const cartSlice = createSlice({
-    name: "cart",
+const cardSlice = createSlice({
+    name: "card",
     initialState,
     reducers: {
-        addItemToCart: (state, action) => {
-            state.items.push(action.payload);
+        addItemToCard: (state, action) => {
+            const { product } = action.payload;
+            const existingItem = state.items.find(item => item.product.id === product.id);
+            if (existingItem) {
+                console.log("secondly here")
+                existingItem.quantity += 1;
+            } else {
+                console.log("first here ")
+                state.items.push({ product, quantity: 1 });
+            }
         },
-        removeItemFromCart: (state, action) => {
-            state.items = state.items.filter(item => item.id !== action.payload.id);
+        removeItemFromCard: (state, action) => {
+            const { id } = action.payload;
+            console.log(action.payload)
+            const index = state.items.findIndex(item => item.id === id);
+            console.log(index)
+            if (index !== -1) {
+                console.log("index not equeal -1")
+                if (state.items[index].quantity > 1) {
+                    console.log("index not equeal -1")
+                    state.items[index].quantity -= 1;
+                } else {
+                    state.items = state.items.filter(item =>  item.product.id !== action.payload);
+                }
+            }
         },
-        clearCart: (state) => {
+        clearCard: (state) => {
             state.items = [];
         },
     },
 });
 
-export const { addItemToCart, removeItemFromCart, clearCart } = cartSlice.actions;
+export const { addItemToCard, removeItemFromCard, clearCard } = cardSlice.actions;
 
-export default cartSlice.reducer;
+export default cardSlice.reducer;

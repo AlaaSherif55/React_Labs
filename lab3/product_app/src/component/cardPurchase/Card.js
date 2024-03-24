@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import {removeItemFromCard}from '../../store/slice/cardSlice';
+import {decrementCounter}from '../../store/slice/counter';
 const Card = () => {
     const dispatch = useDispatch();
     const cartItems = useSelector(state => state.card.items);
     console.log(cartItems)
-    const removeProduct = (index) => {
-        console.log("Removing product at index:", index);
-
+    const removeProduct = (product) => {
+        dispatch(removeItemFromCard(product.id))
+        dispatch(decrementCounter())
     };
 
     const incrementQuantity = (index) => {
@@ -52,7 +53,7 @@ const Card = () => {
                   </div>
                 </td>
                 <td style={{ width: '15%', textAlign: 'center' }}>
-                  <button className="rmvbtn rounded small" onClick={() => removeProduct(index)}>X</button>
+                  <button className="rmvbtn rounded small" onClick={() => removeProduct(item.product)}>X</button>
                 </td>
                 <td style={{ width: '15%', textAlign: 'center' }}>{item.product.price}$</td>
               </tr>

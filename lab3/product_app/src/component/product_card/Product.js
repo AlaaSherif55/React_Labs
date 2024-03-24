@@ -4,13 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Product.css';
 import Navbar from '../Navbar/Navbar';
 import { useDispatch} from 'react-redux'
-import { addItemToCart } from '../../store/slice/cardSlice';
+import { addItemToCard } from '../../store/slice/cardSlice';
 import {  incrementCounter } from '../../store/slice/counter';
 import { axiosInstance } from '../../apis/config';
 
 const Product = () => {
-
-  const dispatch = useDispatch();
 
   const { productID } = useParams();
   const [product, setProduct] = useState(null);
@@ -32,12 +30,11 @@ const Product = () => {
     
   }, [productID ]);
 
-  const addToCart = () => {
-    if (product) {
-      dispatch(incrementCounter());
-      dispatch(addItemToCart(product)); 
-      console.log(`here ${product}`)
-    }
+  const dispatch = useDispatch();
+
+  const addToCart = (product) => {
+    dispatch(incrementCounter());
+    dispatch(addItemToCard(product));
   };
 
   const showImg = (pic) => {
@@ -83,7 +80,9 @@ const Product = () => {
           <input type="number" min="1" max="5" defaultValue="1" />
         </div>
         <div class="btn-box">
-        <button class="cart-btn" onClick={addToCart}>Add to Cart</button>
+        <a className="btn btn-primary w-50 custom-rounded-btn" href="#" role="button" onClick={()=> addToCart({product})}>
+          Add To Cart
+        </a>
           <button class="buy-btn">Buy Now</button>
         </div>
       </div>

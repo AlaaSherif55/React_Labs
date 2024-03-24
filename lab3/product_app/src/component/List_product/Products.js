@@ -4,7 +4,7 @@ import ProductCard from '../../reusableComponent/productCard/ProductCard';
 import './Products.css'
 import { useDispatch} from 'react-redux'
 import { incrementCounter} from '../../store/slice/counter';
-import { addItemToCart } from '../../store/slice/cardSlice';
+import { addItemToCard } from '../../store/slice/cardSlice';
 import { axiosInstance } from '../../apis/config';
 const Products = () => {
 
@@ -12,7 +12,7 @@ const Products = () => {
 
   const addToCart = (product) => {
     dispatch(incrementCounter());
-    dispatch(addItemToCart(product));
+    dispatch(addItemToCard(product));
   };
 
   function renderContent(product,addToCart){
