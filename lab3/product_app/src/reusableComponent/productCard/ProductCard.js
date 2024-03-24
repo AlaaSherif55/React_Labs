@@ -1,7 +1,7 @@
 
- function ProductCard({product,renderContent}) {
+ function ProductCard({product,renderContent,addToCard}) {
   return (
-   renderContent(product)
+   renderContent(product,addToCard)
   )
 }
 export default ProductCard;

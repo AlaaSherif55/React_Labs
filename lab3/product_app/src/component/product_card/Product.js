@@ -1,30 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Product.css'
+import './Product.css';
 import Navbar from '../Navbar/Navbar';
+import { useDispatch} from 'react-redux'
+import { addItemToCart } from '../../store/slice/cardSlice';
+import {  incrementCounter } from '../../store/slice/counter';
+import { axiosInstance } from '../../apis/config';
+
 const Product = () => {
+
+  const dispatch = useDispatch();
+
   const { productID } = useParams();
   const [product, setProduct] = useState(null);
   const [bigImgSrc, setBigImgSrc] = useState(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        console.log(productID )
-        const response = await fetch(`https://dummyjson.com/products/${productID }`);
-        const data = await response.json();
-        setProduct(data);
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      }
-    };
-    fetchProduct();
+
+    axiosInstance
+    .get(`/products/${productID}`)
+    .then((res) => {
+     setProduct(res.data)
+     setLoading(false)
+    })
+    .catch((err) => {
+      console.log(err);
+      setLoading(false)
+    
+    });
+    
   }, [productID ]);
 
   const addToCart = () => {
-
+    if (product) {
+      dispatch(incrementCounter());
+      dispatch(addItemToCart(product)); 
+      console.log(`here ${product}`)
+    }
   };
 
   const showImg = (pic) => {
@@ -70,7 +83,7 @@ const Product = () => {
           <input type="number" min="1" max="5" defaultValue="1" />
         </div>
         <div class="btn-box">
-          <button class="cart-btn" onClick={addToCart}>Add to Cart</button>
+        <button class="cart-btn" onClick={addToCart}>Add to Cart</button>
           <button class="buy-btn">Buy Now</button>
         </div>
       </div>

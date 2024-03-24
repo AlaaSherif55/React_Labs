@@ -1,155 +1,118 @@
-import React, { useState } from 'react';
+import { useFormik } from 'formik'
+import React from 'react'
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom'
+import { updateFormData } from '../../store/slice/formSlice';
+import * as Yup from 'yup';
 
-const Register = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    image: null,
-  });
+export default function Register() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+            password: '',
+            confpassword: '',
+            photo: '',
+        },
+        validationSchema: Yup.object({
+            name: Yup.string()
+              .required('Required'),
 
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    image: '',
-  });
+            email: Yup.string().email('Invalid email address').required('Required'),
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+            password: Yup.string()
+            .min(8, 'Must be 8 characters or more')
+            .max(12, 'Must be 12 characters or less')
+            .required('Required'),
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      image: file,
-    });
-  };
+            confpassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], 'Passwords must match')
+            .required('Required'),
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+            photo: Yup.string()
+            .required('Required')
+        }),
+        
+        onSubmit: values => {
+            dispatch(updateFormData(values))
+            navigate('/profile');
+        },
+    })
+    return (
+        <form className="w-25 border border shadow m-auto p-4 mt-3" onSubmit={formik.handleSubmit}>
+        <label htmlFor="name" className="form-label">Name</label>
+        <input
+            name="name"
+            id="name"
+            type="name"
+            className="form-control"
+            {...formik.getFieldProps('name')}
+        />
+        {formik.touched.name && formik.errors.name ?
+         <div className="text-danger">{formik.errors.name}</div> : null}
+    
+        <br/>
+        <label htmlFor="email" className="form-label">Email</label>
+        <input
+            name="email"
+            id="email"
+            type="email"
+            className="form-control"
+            {...formik.getFieldProps('email')}
+        />
+        {formik.touched.email && formik.errors.email 
+        ? <div className="text-danger">{formik.errors.email}</div> : null}
 
-    // Perform validation
-    let newErrors = {};
-    // Validate name
-    if (formData.name === '') {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.includes(' ')) {
-      newErrors.name = 'Name should not contain spaces';
-    }
-    // Validate email
-    if (formData.email === '') {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email should be in email format';
-    }
-    // Validate password
-    if (formData.password === '') {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password should be at least 8 characters';
-    } else if (formData.password.length > 12) {
-      newErrors.password = 'Password should be at most 12 characters';
-    }
-    // Validate confirm password
-    if (formData.confirmPassword === '') {
-      newErrors.confirmPassword = 'Confirm password is required';
-    } else if (formData.confirmPassword !== formData.password) {
-      newErrors.confirmPassword = 'Confirm password should match the password';
-    }
-    // Validate image
-    if (!formData.image) {
-      newErrors.image = 'Image is required';
-    }
 
-    // Update errors state
-    setErrors(newErrors);
+        <br/>
+        
+        <label htmlFor="password" className="form-label">Password</label>
+        <input
+            name="password"
+            id="password"
+            type="password"
+            className="form-control"
+            {...formik.getFieldProps('password')}
+        />
+        {formik.touched.password && formik.errors.password ?
+         <div className="text-danger">{formik.errors.password}</div> : null}
+        <br/>
 
-    // If no errors, submit the form
-    if (Object.keys(newErrors).length === 0) {
-      console.log('Form data:', formData);
-    }
-  };
+        <label htmlFor="confpassword" className="form-label">Confirm Password</label>
+        <input
+            name="confpassword"
+            id="confpassword"
+            type="password"
+            className="form-control"
+            {...formik.getFieldProps('confpassword')}
+        />
+        {formik.touched.confpassword && formik.errors.confpassword ? 
+        <div className="text-danger">{formik.errors.confpassword}</div> : null}
+        <br/>
 
-  return (
-    <div className="container">
-    <div className="row justify-content-center">
-      <div className="col-md-6">
-        <h1 className="text-center mb-4">Register</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">Name</label>
-            <input
-              type="text"
-              className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            {errors.name && <div className="invalid-feedback">{errors.name}</div>}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email</label>
-            <input
-              type="email"
-              className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">Password</label>
-            <input
-              type="password"
-              className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-            <input
-              type="password"
-              className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-            {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="image" className="form-label">Upload Image</label>
-            <input
-              type="file"
-              className={`form-control ${errors.image ? 'is-invalid' : ''}`}
-              id="image"
-              name="image"
-              onChange={handleImageChange}
-            />
-            {errors.image && <div className="invalid-feedback">{errors.image}</div>}
-          </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
-      </div>
-    </div>
-  </div>
+        <label htmlFor="photo" className="form-label">Photo</label>
+        <input
+            name="photo"
+            id="photo"
+            type="file"
+            className="form-control"
+            {...formik.getFieldProps('photo')}
+        />
+        {formik.touched.photo && formik.errors.photo ? 
+        <div className="text-danger">{formik.errors.photo}</div> : null}
+        <br/>
+    
+        <button type="submit" className="btn btn-primary w-100">Register</button><br/>
+        <span>Already have an account? <Link to="/">Login!</Link></span>
+    </form>
+  )
+}
 
-  );
-};
 
-export default Register;
+
+
+
+
+

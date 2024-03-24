@@ -2,8 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../../reusableComponent/productCard/ProductCard';
 import './Products.css'
+import { useDispatch} from 'react-redux'
+import { incrementCounter} from '../../store/slice/counter';
+import { addItemToCart } from '../../store/slice/cardSlice';
+import { axiosInstance } from '../../apis/config';
 const Products = () => {
-  function renderContent(product){
+
+  const dispatch = useDispatch();
+
+  const addToCart = (product) => {
+    dispatch(incrementCounter());
+    dispatch(addItemToCart(product));
+  };
+
+  function renderContent(product,addToCart){
     return  <div className="col-md-3" key={product.id}>
     <div className="card" style={{ width: '18rem', marginBottom: '20px', position: 'relative' }}>
       <button
@@ -36,7 +48,7 @@ const Products = () => {
           <span className="fa fa-star"></span>
           <span className="fa fa-star"></span>
         </div>
-        <a className="btn btn-primary w-50 custom-rounded-btn" href="#" role="button">
+        <a className="btn btn-primary w-50 custom-rounded-btn" href="#" role="button" onClick={()=> addToCart({product})}>
           Add To Cart
         </a>
       </div>
@@ -46,25 +58,21 @@ const Products = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://dummyjson.com/products');
-        const data = await response.json();
-        setProducts(data.products);
-        console.log(data.products[0].id)
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
+     
+    axiosInstance
+    .get(`/products`)
+    .then((res) => {
+      setProducts(res.data.products)
+    })
+    .catch((err) => console.log(err));
+  
   }, []);
 
   return (
     <div className="container">
       <div className="row">
         {products.map((product,index) => (
-          <ProductCard key={`product-${index}`} renderContent= {renderContent} product={product}></ProductCard>
+          <ProductCard key={`product-${index}`} renderContent= {renderContent} product={product} addToCard={addToCart}></ProductCard>
         ))}
       </div>
     </div>
