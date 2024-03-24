@@ -15,18 +15,12 @@ const counter = createSlice({
         decrementCounter: (state) => {
             state.counter_val = state.counter_val - 1
         },
-        resetCounter: (state) => {
-            state.counter_val = 0
-        },
-        incrementByValue: (state, action) => {
-            state.counter_val = state.counter_val + action.payload
-        },
-        changeCounterMaxLimit: (state, action) => {
-            state.counter_max_limit = action.payload
-        },
+        decreaceCounterByValue: (state,action) => {
+            state.counter_val -= action.payload
+        }
     }
 })
-// FUNCTIONS => Component => fire action => update data
-export const { incrementCounter ,  decrementCounter ,  resetCounter , incrementByValue } = counter.actions;
+
+export const { incrementCounter ,  decrementCounter, decreaceCounterByValue } = counter.actions;
 
 export default counter.reducer;

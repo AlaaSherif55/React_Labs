@@ -1,22 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {removeItemFromCard}from '../../store/slice/cardSlice';
-import {decrementCounter}from '../../store/slice/counter';
+import {decrementCounter,incrementCounter, decreaceCounterByValue}from '../../store/slice/counter';
+import {reduceQuantityForItem,icrementQuantityForItem,removeItemFromCard}from '../../store/slice/cardSlice';
+import {}from '../../store/slice/cardSlice';
 const Card = () => {
+    const [totalPrice, settotalPrice] = useState(0);
     const dispatch = useDispatch();
     const cartItems = useSelector(state => state.card.items);
-    console.log(cartItems)
+    useEffect(()=>{
+      let sum;
+      console.log(cartItems)
+      if(cartItems){
+        sum=0
+          cartItems.forEach(item => {
+            sum += item.product.price*item.quantity;
+          });
+          settotalPrice(sum)
+      }
+    },[cartItems])
+
     const removeProduct = (product) => {
         dispatch(removeItemFromCard(product.id))
-        dispatch(decrementCounter())
+        const foundItem = cartItems.find(item => item.product.id === product.id);
+        dispatch(decreaceCounterByValue(foundItem.quantity))
     };
 
-    const incrementQuantity = (index) => {
-
+    const incrementQuantity = (product) => {
+      console.log(`here ${product.title}`)
+      dispatch(icrementQuantityForItem(product.id))
+      dispatch(incrementCounter())
     };
 
-    const decrementQuantity = (index) => {
-      
+    const decrementQuantity = (product) => {
+      dispatch(reduceQuantityForItem(product.id))
+      dispatch(decrementCounter())
     };
 
     return (
@@ -47,9 +64,9 @@ const Card = () => {
                 <td style={{ width: '25%' }}>{item.product.description}</td>
                 <td style={{ width: '15%', textAlign: 'center' }}>
                   <div className="d-flex justify-content-center align-items-center button-container">
-                    <button className="quantity-btn" onClick={() => decrementQuantity(index)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>-</button>
+                    <button className="quantity-btn" onClick={() => decrementQuantity(item.product)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>-</button>
                     <input type="text" className="quantity-input" value={item.quantity} readOnly />
-                    <button className="quantity-btn" onClick={() => incrementQuantity(index)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>+</button>
+                    <button className="quantity-btn" onClick={() => incrementQuantity(item.product)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>+</button>
                   </div>
                 </td>
                 <td style={{ width: '15%', textAlign: 'center' }}>
@@ -64,7 +81,7 @@ const Card = () => {
           <div className="row">
             <div className="col">Total</div>
             <div className="col">
-              {/* Calculate and display total price */}
+              {totalPrice}$
             </div>
           </div>
         </div>

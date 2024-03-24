@@ -20,6 +20,10 @@ const cardSlice = createSlice({
             }
         },
         removeItemFromCard: (state, action) => {
+            state.items = state.items.filter(item =>  item.product.id !== action.payload);
+           
+        },
+        reduceQuantityForItem: (state, action) => {
             const { id } = action.payload;
             console.log(action.payload)
             const index = state.items.findIndex(item => item.id === id);
@@ -34,12 +38,22 @@ const cardSlice = createSlice({
                 }
             }
         },
+        icrementQuantityForItem: (state, action) => {
+            const { id } = action.payload;
+            console.log(action.payload)
+            const index = state.items.findIndex(item => item.id === id);
+            if(index!== -1){
+                state.items[index].quantity += 1;
+            }
+               
+            
+        },
         clearCard: (state) => {
             state.items = [];
         },
     },
 });
 
-export const { addItemToCard, removeItemFromCard, clearCard } = cardSlice.actions;
+export const { addItemToCard, removeItemFromCard, clearCard, reduceQuantityForItem, icrementQuantityForItem } = cardSlice.actions;
 
 export default cardSlice.reducer;
