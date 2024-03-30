@@ -52,7 +52,7 @@ const Card = () => {
           </thead>
           <tbody>
             {cartItems !== undefined && cartItems.map((item, index) => (
-              <tr className="border-bottom" key={index}>
+              <tr className="border-bottom" key={`cart-${index}`}>
                 <td style={{ width: '15%' }}>
                   <div className="img-container">
                     <div className="img-prdct">
