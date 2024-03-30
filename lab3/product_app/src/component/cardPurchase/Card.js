@@ -19,20 +19,19 @@ const Card = () => {
       }
     },[cartItems])
 
-    const removeProduct = (product) => {
-        dispatch(removeItemFromCard(product.id))
-        const foundItem = cartItems.find(item => item.product.id === product.id);
-        dispatch(decreaceCounterByValue(foundItem.quantity))
+    const removeProduct = (item) => {
+        dispatch(removeItemFromCard(item.product.id))
+        dispatch(decreaceCounterByValue(item.quantity))
     };
 
-    const incrementQuantity = (product) => {
-      console.log(`here ${product.title}`)
-      dispatch(icrementQuantityForItem(product.id))
+    const incrementQuantity = (item) => {
+      console.log(`here ${item.product.title}`)
+      dispatch(icrementQuantityForItem(item.product.id))
       dispatch(incrementCounter())
     };
 
-    const decrementQuantity = (product) => {
-      dispatch(reduceQuantityForItem(product.id))
+    const decrementQuantity = (item) => {
+      dispatch(reduceQuantityForItem(item.product.id))
       dispatch(decrementCounter())
     };
 
@@ -52,7 +51,7 @@ const Card = () => {
           </thead>
           <tbody>
             {cartItems !== undefined && cartItems.map((item, index) => (
-              <tr className="border-bottom" key={`cart-${index}`}>
+              <tr className="border-bottom" key={item.id}>
                 <td style={{ width: '15%' }}>
                   <div className="img-container">
                     <div className="img-prdct">
@@ -64,13 +63,13 @@ const Card = () => {
                 <td style={{ width: '25%' }}>{item.product.description}</td>
                 <td style={{ width: '15%', textAlign: 'center' }}>
                   <div className="d-flex justify-content-center align-items-center button-container">
-                    <button className="quantity-btn" onClick={() => decrementQuantity(item.product)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>-</button>
+                    <button className="quantity-btn" onClick={() => decrementQuantity(item)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>-</button>
                     <input type="text" className="quantity-input" value={item.quantity} readOnly />
-                    <button className="quantity-btn" onClick={() => incrementQuantity(item.product)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>+</button>
+                    <button className="quantity-btn" onClick={() => incrementQuantity(item)} style={{ backgroundColor: '#1E90FF', color: '#fff' }}>+</button>
                   </div>
                 </td>
                 <td style={{ width: '15%', textAlign: 'center' }}>
-                  <button className="rmvbtn rounded small" onClick={() => removeProduct(item.product)}>X</button>
+                  <button className="rmvbtn rounded small" onClick={() => removeProduct(item)}>X</button>
                 </td>
                 <td style={{ width: '15%', textAlign: 'center' }}>{item.product.price}$</td>
               </tr>
@@ -86,6 +85,7 @@ const Card = () => {
           </div>
         </div>
       </div>
+            
     );
 };
 

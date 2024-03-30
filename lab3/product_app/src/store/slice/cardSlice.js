@@ -26,7 +26,7 @@ const cardSlice = createSlice({
         reduceQuantityForItem: (state, action) => {
             const { id } = action.payload;
             console.log(action.payload)
-            const index = state.items.findIndex(item => item.id === id);
+            const index = state.items.findIndex(item => item.product.id === id);
             console.log(index)
             if (index !== -1) {
                 console.log("index not equeal -1")
@@ -41,7 +41,7 @@ const cardSlice = createSlice({
         icrementQuantityForItem: (state, action) => {
             const { id } = action.payload;
             console.log(action.payload)
-            const index = state.items.findIndex(item => item.id === id);
+            const index = state.items.findIndex(item => item.product.id === id);
             if(index!== -1){
                 state.items[index].quantity += 1;
             }
